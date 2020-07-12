@@ -1,82 +1,73 @@
-import React, { Component } from 'react';
-import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle } from 'reactstrap';
+import React from 'react';
+import { Card, CardImg, CardText, CardBody, CardTitle } from 'reactstrap';
 
-class Dishdetail extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-        };
-    }
+	function RenderDish({dish}) {
+		if (dish === null) {
+			return (
+				<div></div>
+			);
+		}
+		else {
+			return (
+				<div  className="col-12 col-md-5 m-1"> 
+					<Card>
+						<CardImg width="100%" src={dish.image} alt={dish.name} />
+						<CardBody>
+							<CardTitle>{dish.name}</CardTitle>
+							<CardText>{dish.description}</CardText>
+						</CardBody>
+					</Card>
+				</div>
+			);
+		}
+	}
 
-    renderDish(dish) {
-        if (dish === null) {
-            return (
-                <div></div>
-            );
-        }
-        else {
-            return (
-                <div  className="col-12 col-md-5 m-1"> 
-                    <Card>
-                        <CardImg width="100%" src={dish.image} alt={dish.name} />
-                        <CardBody>
-                            <CardTitle>{dish.name}</CardTitle>
-                            <CardText>{dish.description}</CardText>
-                        </CardBody>
-                    </Card>
-                </div>
-            );
-        }
-    }
+	function RenderComments({comments}) {
+		if (comments == null) {
+			return (<div></div>)
+		}
+		const cmnts = comments.map(comment => {
+			return (
+				<li key={comment.id}>
+					<p>{comment.comment}</p>
+					<p>-- {comment.author},
+					&nbsp;
+					{new Intl.DateTimeFormat('en-US', {
+							year: 'numeric',
+							month: 'long',
+							day: '2-digit'
+						}).format(new Date(Date.parse(comment.date)))}
+					</p>
+				</li>
+			);
+		});
+		return (
+			<div className='col-12 col-md-5 m-1'>
+				<h4> Comments </h4>
+				<ul className='list-unstyled'>
+					{cmnts}
+				</ul>
 
-    renderComment(comments) {
-        if (comments == null) {
-            return (<div></div>)
-        }
-        const cmnts = comments.map(comment => {
-            return (
-                <li key={comment.id}>
-                    <p>{comment.comment}</p>
-                    <p>-- {comment.author},
-                    &nbsp;
-                    {new Intl.DateTimeFormat('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: '2-digit'
-                        }).format(new Date(Date.parse(comment.date)))}
-                    </p>
-                </li>
-            );
-        });
-        return (
-            <div className='col-12 col-md-5 m-1'>
-                <h4> Comments </h4>
-                <ul className='list-unstyled'>
-                    {cmnts}
-                </ul>
+			</div>
+		);
+	}
 
-            </div>
-        );
-    }
+	const DishDetail = (props) => {
+		if (props.dish == null) {
+			return (<div></div>)
+		}
+		else {
+			return (
+				<div className="container">
+					<div className="row"> 
+						<RenderDish dish={props.dish} />
+						<RenderComments comments={props.dish.comments} />
+					</div>
+				</div>
+			);
+		}
+	}
 
-    render() {
-        if (this.props.dish == null) {
-            return (<div></div>)
-        }
-        else {
-            const dishItem = this.renderDish(this.props.dish);
-            const commentItem = this.renderComment(this.props.dish.comments);
-            return (
-                <div className="container">
-                    <div className="row"> 
-                        {dishItem}
-                        {commentItem}
-                    </div>
-                </div>
-            );
-        }
-    }
-}
 
-export default Dishdetail;
+export default DishDetail;
